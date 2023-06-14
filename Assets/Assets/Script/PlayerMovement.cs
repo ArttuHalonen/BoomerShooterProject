@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Slope Handling")]
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
+    private bool exitingSlope;
 
 
     Vector3 moveDirection;
@@ -153,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on slope
-        if (OnSlope())
+        if (OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
 
@@ -173,7 +174,7 @@ public class PlayerMovement : MonoBehaviour
     private void SpeedControl()
     {
         // limiting speed on slope
-        if (OnSlope())
+        if (OnSlope() && !exitingSlope)
         {
             if (rb.velocity.magnitude > moveSpeed)
                 rb.velocity = rb.velocity.normalized * moveSpeed;
@@ -196,6 +197,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        exitingSlope = true;
+
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -204,6 +207,8 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+
+        exitingSlope = false;
     }
 
     // Slopeing
