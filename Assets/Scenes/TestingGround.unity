@@ -1667,13 +1667,14 @@ MonoBehaviour:
   airMultiplier: 2
   crouchSpeed: 3.5
   CrouchYScale: 0.5
-  playerHeight: 2.1
+  playerHeight: 11
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
   grounded: 0
   readyToJump: 0
   orientation: {fileID: 172648447}
+  maxSlopeAngle: 40
   state: 0
 --- !u!1 &1780001764
 GameObject:
@@ -2611,6 +2612,7 @@ MonoBehaviour:
   grounded: 0
   readyToJump: 0
   orientation: {fileID: 172648447}
+  maxSlopeAngle: 0
   state: 0
 --- !u!4 &923186002796498556
 Transform:

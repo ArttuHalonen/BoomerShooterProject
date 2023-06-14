@@ -36,6 +36,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation;
     float horizontalInput;
     float verticalInput;
+
+    [Header("Slope Handling")]
+    public float maxSlopeAngle;
+    private RaycastHit slopeHit;
+
+
     Vector3 moveDirection;
     Rigidbody rb;
 
@@ -136,15 +142,30 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.air;
         }
+
+        // turn gravity off while on slope
+        rb.useGravity = !OnSlope();
     }
 
     private void MovePlayer()
     {
+        // Calculate direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
+        // on slope
+        if (OnSlope())
+        {
+            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
+
+            if (rb.velocity.y > 0)
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
+
+        // on ground
         if(grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-
+        
+        // in air
         else if(!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
@@ -170,6 +191,23 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    // Slopeing
+    private bool OnSlope()
+    {
+        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
 }
