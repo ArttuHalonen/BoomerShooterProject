@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -12,7 +13,7 @@ public class Gun : MonoBehaviour
 
     float timeSinceLastShot;
 
-
+    public GameObject projectile;
 
     private void Start()
     {
@@ -47,6 +48,7 @@ public class Gun : MonoBehaviour
             {
                 int layerMask = 1 << 8;
                 layerMask = ~layerMask;
+                Instantiate(projectile, muzzle.transform.position, muzzle.transform.rotation * Quaternion.Euler(0, -0, 0));
                 if (Physics.Raycast(muzzle.position, muzzle.forward, out RaycastHit hitInfo, gunData.maxDistance, layerMask))
                 {
                     IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
