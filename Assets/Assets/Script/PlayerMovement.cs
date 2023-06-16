@@ -48,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
 
     public MovementState state;
 
+    public Vector3 velocity;
+
     public enum MovementState
     {
         walking,
@@ -69,14 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f * 0.2f, whatIsGround);
 
-        MyInput();
-
-        if (grounded)
-            rb.drag = groundDrag;
-        else
-            rb.drag = 0;
     }
     
     private void FixedUpdate()
@@ -84,6 +79,18 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         SpeedControl();
         StateHandler();
+
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+
+        // Debug DrawRay
+        Debug.DrawRay(transform.position, Vector3.down * playerHeight * 0.5f + Vector3.down * 0.2f, Color.green, Time.fixedDeltaTime);
+
+        MyInput();
+
+        if (grounded)
+            rb.drag = groundDrag;
+        else
+            rb.drag = 0;
     }
 
 
@@ -227,5 +234,31 @@ public class PlayerMovement : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
