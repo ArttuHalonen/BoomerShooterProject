@@ -7,7 +7,7 @@ public class EquipmentManager : MonoBehaviour
     [Header("GunStats")]
     public int gunDamage;
     public int gunFireRate;
-    public float gunReloadtime;
+    public float gunReloadTime;
     public int gunMaxAmmo;
     public int gunCurrentAmmo;
 
