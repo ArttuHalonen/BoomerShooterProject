@@ -13,6 +13,7 @@ public class HitScanGun2 : MonoBehaviour
     [SerializeField] private ParticleSystem ParticleShootingSystem;
     [SerializeField] private ParticleSystem ImpactParticleSystem;
     [SerializeField] TrailRenderer BulletTrail;
+    [SerializeField] LayerMask rayMask;
 
     private float LastShootTime;
 
@@ -24,35 +25,16 @@ public class HitScanGun2 : MonoBehaviour
     }
     private void Shoot()
     {
-        int layerMask = 1 << 8;
-        layerMask = ~layerMask;
-        Vector3 direction = GetDirection();
-        
-        if (Physics.Raycast(muzzle2.position, muzzle2.forward * 50f, direction, out RaycastHit hitInfo, layerMask))
+        ParticleShootingSystem.Play();
+        if (Physics.Raycast(muzzle2.position, muzzle2.forward * 50f, out RaycastHit hitInfo, rayMask))
         {
-            IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
-            damageable.Damage(gunInfo.gunDamage);
-            Debug.Log("OW!");
+            //IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
+            //damageable.Damage(gunInfo.gunDamage);
+            Debug.Log(hitInfo.collider.gameObject);
+            Debug.DrawLine(muzzle2.position, hitInfo.point, Color.red, 0.5f);
         }
-        Debug.DrawRay(muzzle2.position, muzzle2.forward * 50f, Color.red, 0.5f);
     }
-    private Vector3 GetDirection()
-    {
-        Vector3 direction = transform.forward;
 
-        if (AddBulletSpread)
-        {
-            direction += new Vector3(
-                Random.Range(-BulletSpreadVariance.x, BulletSpreadVariance.x),
-                Random.Range(-BulletSpreadVariance.y, BulletSpreadVariance.y),
-                Random.Range(-BulletSpreadVariance.z, BulletSpreadVariance.z)
-            );
-
-            direction.Normalize();
-        }
-
-        return direction;
-    }
 
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {

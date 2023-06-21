@@ -9,7 +9,7 @@ public class HitScanGun : MonoBehaviour
 
     [Header("Behaviour")]
     [SerializeField] private bool AddBulletSpread = true;
-    [SerializeField] private Vector3 BulletSpreadVariance = new Vector3(0.1f, 0.1f, 0.1f);
+    [SerializeField] private Vector3 BulletSpreadVariance = new(0.1f, 0.1f, 0.1f);
     [SerializeField] private ParticleSystem ParticleShootingSystem;
     [SerializeField] private ParticleSystem ImpactParticleSystem;
     [SerializeField] TrailRenderer BulletTrail;
