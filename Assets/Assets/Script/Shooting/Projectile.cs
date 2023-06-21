@@ -14,16 +14,11 @@ public class Projectile : MonoBehaviour
     }
     private void OnTriggerEnter (Collider other)
     {
-        if (TryGetComponent<IDamageable>(out IDamageable damageable))
+        if (TryGetComponent(out IDamageable damageable))
         {
             damageable.Damage(gunInfo.gunDamage);
             Debug.Log("OW");
-            Destroy(this.gameObject);
         }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-
+        Destroy(this.gameObject);
     }
 }

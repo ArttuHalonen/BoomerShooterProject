@@ -5,11 +5,11 @@ public class EquipmentManager : MonoBehaviour
     [Header("Currently Equipped")]
 
     [Header("GunStats")]
-    public float gunDamage;
-    public float gunFireRate;
+    public int gunDamage;
+    public int gunFireRate;
     public float gunReloadtime;
-    public float gunMaxAmmo;
-    public float gunCurrentAmmo;
+    public int gunMaxAmmo;
+    public int gunCurrentAmmo;
 
     public bool gunReloading;
 }

@@ -1,7 +1,7 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
-public class HitScanGun : MonoBehaviour
+public class HitScanGun2 : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform muzzle2;
@@ -9,31 +9,33 @@ public class HitScanGun : MonoBehaviour
 
     [Header("Behaviour")]
     [SerializeField] private bool AddBulletSpread = true;
-    [SerializeField] private Vector3 BulletSpreadVariance = new Vector3(0.1f, 0.1f, 0.1f);
+    [SerializeField] private Vector3 BulletSpreadVariance = new(0.1f, 0.1f, 0.1f);
     [SerializeField] private ParticleSystem ParticleShootingSystem;
     [SerializeField] private ParticleSystem ImpactParticleSystem;
     [SerializeField] TrailRenderer BulletTrail;
-    [SerializeField] private float ShootDelay = 0.5f;
-    private LayerMask Mask;
 
     private float LastShootTime;
 
-    public void Shoot()
+
+
+    private void Start()
     {
-        if (LastShootTime + ShootDelay < Time.time)
-        {
-            ParticleShootingSystem.Play();
-            if (Physics.Raycast(muzzle2.position, muzzle2.forward * 50f, out RaycastHit hit, float.MaxValue, Mask))
-            {
-                TrailRenderer trail = Instantiate(BulletTrail, muzzle2.position, Quaternion.identity);
-
-                StartCoroutine(SpawnTrail(trail, hit));
-
-                LastShootTime = Time.time;
-            }
-        }
+        PlayerShoot.shootInput += Shoot;
     }
-
+    private void Shoot()
+    {
+        int layerMask = 1 << 8;
+        layerMask = ~layerMask;
+        Vector3 direction = GetDirection();
+        
+        if (Physics.Raycast(muzzle2.position, muzzle2.forward * 50f, direction, out RaycastHit hitInfo, layerMask))
+        {
+            IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
+            damageable.Damage(gunInfo.gunDamage);
+            Debug.Log("OW!");
+        }
+        Debug.DrawRay(muzzle2.position, muzzle2.forward * 50f, Color.red, 0.5f);
+    }
     private Vector3 GetDirection()
     {
         Vector3 direction = transform.forward;
@@ -51,6 +53,7 @@ public class HitScanGun : MonoBehaviour
 
         return direction;
     }
+
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
         float time = 0;
@@ -69,5 +72,3 @@ public class HitScanGun : MonoBehaviour
         Destroy(Trail.gameObject, Trail.time);
     }
 }
-
-   

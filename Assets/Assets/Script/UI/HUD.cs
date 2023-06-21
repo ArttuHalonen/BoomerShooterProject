@@ -8,6 +8,10 @@ public class HUD : MonoBehaviour
 
     private void Start()
     {
+
+    }
+    private void Update()
+    {
         ammoText.text = gunInfo.gunCurrentAmmo.ToString();
     }
 }
