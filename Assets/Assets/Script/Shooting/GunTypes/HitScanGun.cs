@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.ProBuilder.MeshOperations;
 
 public class HitScanGun : MonoBehaviour
 {
